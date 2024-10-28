@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.simbirsoft.account.grpc";
+option java_outer_classname = "AccountProto";
+
+package account;
+
+service AccountService {
+  rpc SignUp (SignUpRequest) returns (SignUpResponse);
+  rpc SignIn (SignInRequest) returns (SignInResponse);
+  rpc ValidateToken (ValidateTokenRequest) returns (ValidateTokenResponse);
+}
+
+message SignUpRequest {
+  string lastName = 1;
+  string firstName = 2;
+  string username = 3;
+  string password = 4;
+}
+
+message SignUpResponse {
+  string message = 1;
+}
+
+message SignInRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message SignInResponse {
+  string token = 1;
+}
+
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+message ValidateTokenResponse {
+  bool isValid = 1;
+}

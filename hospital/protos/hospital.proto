@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.simbirsoft.hospitals.grpc";
+option java_outer_classname = "HospitalProto";
+
+package hospital;
+
+service HospitalService {
+  rpc GetHospitals (GetHospitalsRequest) returns (GetHospitalsResponse);
+  rpc CreateHospital (CreateHospitalRequest) returns (CreateHospitalResponse);
+}
+
+message GetHospitalsRequest {}
+
+message GetHospitalsResponse {
+  repeated Hospital hospitals = 1;
+}
+
+message Hospital {
+  string name = 1;
+  string address = 2;
+  string contactPhone = 3;
+  string rooms = 4;
+}
+
+message CreateHospitalRequest {
+  string name = 1;
+  string address = 2;
+  string contactPhone = 3;
+  string rooms = 4;
+}
+
+message CreateHospitalResponse {
+  string message = 1;
+}

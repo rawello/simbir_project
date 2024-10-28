@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  account:
+    build:
+      context: ./account
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/accountdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=123321
+    depends_on:
+      - postgres
+
+  hospital:
+    build:
+      context: ./hospital
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/hospitaldb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=123321
+    depends_on:
+      - postgres
+
+  timetable:
+    build:
+      context: ./timetable
+    ports:
+      - "8083:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/timetabledb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=123321
+    depends_on:
+      - postgres
+
+  document:
+    build:
+      context: ./document
+    ports:
+      - "8084:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/documentdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=123321
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13.16-bookworm
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123321
+      POSTGRES_DB: masterdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  postgres_data:

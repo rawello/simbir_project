@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.simbirsoft.document.grpc";
+option java_outer_classname = "DocumentProto";
+
+package document;
+
+service DocumentService {
+  rpc GetHistoryByAccountId (GetHistoryByAccountIdRequest) returns (GetHistoryByAccountIdResponse);
+  rpc CreateDocument (CreateDocumentRequest) returns (CreateDocumentResponse);
+}
+
+message GetHistoryByAccountIdRequest {
+  int64 accountId = 1;
+}
+
+message GetHistoryByAccountIdResponse {
+  repeated Document documents = 1;
+}
+
+message Document {
+  string date = 1;
+  int64 pacientId = 2;
+  int64 hospitalId = 3;
+  int64 doctorId = 4;
+  string room = 5;
+  string data = 6;
+}
+
+message CreateDocumentRequest {
+  string date = 1;
+  int64 pacientId = 2;
+  int64 hospitalId = 3;
+  int64 doctorId = 4;
+  string room = 5;
+  string data = 6;
+}
+
+message CreateDocumentResponse {
+  string message = 1;
+}

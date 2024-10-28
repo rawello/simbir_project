@@ -1,0 +1,64 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.5'
+	id 'io.spring.dependency-management' version '1.1.6'
+	id 'com.google.protobuf' version '0.9.4'
+}
+
+group = 'com.simbirsoft'
+version = '0.0.1'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.postgresql:postgresql'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+	implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.6'
+	implementation 'io.grpc:grpc-netty-shaded:1.68.0'
+	implementation 'io.grpc:grpc-protobuf:1.68.0'
+	implementation 'io.grpc:grpc-stub:1.68.0'
+	implementation 'com.google.protobuf:protobuf-java:4.28.3'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+protobuf {
+	protoc {
+		artifact = "com.google.protobuf:protoc:4.28.3"
+	}
+	plugins {
+		grpc {
+			artifact = "io.grpc:protoc-gen-grpc-java:1.68.0"
+		}
+	}
+	generateProtoTasks {
+		all()*.plugins {
+			grpc {}
+		}
+	}
+	generatedFilesBaseDir = "$projectDir/src/generated"
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs 'src/generated/main/grpc'
+			srcDirs 'src/generated/main/java'
+		}
+	}
+}
+
+clean {
+	delete protobuf.generatedFilesBaseDir
+}
