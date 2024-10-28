@@ -29,7 +29,7 @@ public class DocumentService {
     @Autowired
     private RestHighLevelClient elasticsearchClient;
 
-    public Document createDocument(Document document) {
+    public Document createHistory(Document document) {
         document.setCreatedAt(LocalDateTime.now());
         Document savedDocument = documentRepository.save(document);
         saveToElasticsearch(savedDocument);
@@ -46,7 +46,6 @@ public class DocumentService {
                 ), XContentType.JSON);
         try {
             IndexResponse response = elasticsearchClient.index(request, RequestOptions.DEFAULT);
-            System.out.println("Indexed with ID: " + response.getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,7 +55,7 @@ public class DocumentService {
         return documentRepository.findAll();
     }
 
-    public Document updateDocument(Long id, Document document) {
+    public Document updateHistory(Long id, Document document) {
         Document existingDocument = documentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Document not found"));
         existingDocument.setAccountId(document.getAccountId());
         existingDocument.setContent(document.getContent());
@@ -75,7 +74,6 @@ public class DocumentService {
                 ), XContentType.JSON);
         try {
             UpdateResponse response = elasticsearchClient.update(request, RequestOptions.DEFAULT);
-            System.out.println("Updated with ID: " + response.getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,9 +88,16 @@ public class DocumentService {
         DeleteRequest request = new DeleteRequest("documents", id.toString());
         try {
             DeleteResponse response = elasticsearchClient.delete(request, RequestOptions.DEFAULT);
-            System.out.println("Deleted with ID: " + response.getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Document> getAccountHistory(Long id) {
+        return documentRepository.findByAccountId(id);
+    }
+
+    public Document getHistoryById(Long id) {
+        return documentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Document not found"));
     }
 }

@@ -17,9 +17,21 @@ public class HospitalController {
     private HospitalService hospitalService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Hospital>> getAllHospitals() {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Hospital>> getAllHospitals(@RequestParam int from, @RequestParam int count) {
         return ResponseEntity.ok(hospitalService.getAllHospitals());
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Hospital> getHospitalById(@PathVariable Long id) {
+        return ResponseEntity.ok(hospitalService.getHospitalById(id));
+    }
+
+    @GetMapping("/{id}/rooms")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<String>> getHospitalRooms(@PathVariable Long id) {
+        return ResponseEntity.ok(hospitalService.getHospitalRooms(id));
     }
 
     @PostMapping

@@ -50,7 +50,6 @@ public class AccountService {
                 ), XContentType.JSON);
         try {
             IndexResponse response = elasticsearchClient.index(request, RequestOptions.DEFAULT);
-            System.out.println("Indexed with ID: " + response.getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,7 +85,6 @@ public class AccountService {
                 ), XContentType.JSON);
         try {
             UpdateResponse response = elasticsearchClient.update(request, RequestOptions.DEFAULT);
-            System.out.println("Updated with ID: " + response.getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,7 +99,6 @@ public class AccountService {
         DeleteRequest request = new DeleteRequest("accounts", id.toString());
         try {
             DeleteResponse response = elasticsearchClient.delete(request, RequestOptions.DEFAULT);
-            System.out.println("Deleted with ID: " + response.getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,5 +106,9 @@ public class AccountService {
 
     public boolean passwordMatches(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
+    public Account getAccountById(Long id) {
+        return accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Account not found"));
     }
 }

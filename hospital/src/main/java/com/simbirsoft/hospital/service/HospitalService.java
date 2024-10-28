@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,6 @@ public class HospitalService {
                 ), XContentType.JSON);
         try {
             IndexResponse response = elasticsearchClient.index(request, RequestOptions.DEFAULT);
-            System.out.println("Indexed with ID: " + response.getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,7 +73,6 @@ public class HospitalService {
                 ), XContentType.JSON);
         try {
             UpdateResponse response = elasticsearchClient.update(request, RequestOptions.DEFAULT);
-            System.out.println("Updated with ID: " + response.getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,9 +87,18 @@ public class HospitalService {
         DeleteRequest request = new DeleteRequest("hospitals", id.toString());
         try {
             DeleteResponse response = elasticsearchClient.delete(request, RequestOptions.DEFAULT);
-            System.out.println("Deleted with ID: " + response.getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Hospital getHospitalById(Long id) {
+        return hospitalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Hospital not found"));
+    }
+
+    public List<String> getHospitalRooms(Long id) {
+        var temp = new ArrayList<String>();
+        temp.add("комната 1");
+        return temp;
     }
 }
